@@ -1,5 +1,7 @@
 from datetime import datetime
 
+# schrijf alle onnodige extra functies in deze parent class
+# Parent class
 class Base:
     def __init__():
         pass

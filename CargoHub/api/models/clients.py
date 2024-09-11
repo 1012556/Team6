@@ -12,7 +12,7 @@ class Clients(Base):
 
     def get_clients(self):
         return self.data
-
+# for x in .... loops in een functie zetten scheelt ruimte.
     def get_client(self, client_id):
         for x in self.data:
             if x["id"] == client_id:
@@ -35,7 +35,8 @@ class Clients(Base):
         for x in self.data:
             if x["id"] == client_id:
                 self.data.remove(x)
-
+# kijk of er meerdere json functies zijn en dan apart in een bestand zetten!
+    # is_debug slechte naam!!!!
     def load(self, is_debug):
         if is_debug:
             self.data = CLIENTS
