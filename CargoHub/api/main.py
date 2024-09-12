@@ -435,12 +435,15 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_response(500) # If it does not it sends error505
                 self.end_headers()
 
+
     def handle_post_version_1(self, path, user):
         if not auth_provider.has_access(user, path, "post"):
             self.send_response(403)
             self.end_headers()
             return
         if path[0] == "warehouses":
+        # post : http://localhost:3000/api/v1/warehouses
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_warehouse = json.loads(post_data.decode())
@@ -449,6 +452,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "locations":
+        # post : http://localhost:3000/api/v1/locations
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_location = json.loads(post_data.decode())
@@ -457,6 +462,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "transfers":
+        # post : http://localhost:3000/api/v1/transfers
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_transfer = json.loads(post_data.decode())
@@ -466,6 +473,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "items":
+        # post : http://localhost:3000/api/v1/items
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_item = json.loads(post_data.decode())
@@ -474,6 +483,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "inventories":
+        # post : http://localhost:3000/api/v1/inventories
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_inventory = json.loads(post_data.decode())
@@ -482,6 +493,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "suppliers":
+        # post : http://localhost:3000/api/v1/suppliers
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_supplier = json.loads(post_data.decode())
@@ -490,6 +503,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "orders":
+        # post : http://localhost:3000/api/v1/orders
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_order = json.loads(post_data.decode())
@@ -498,6 +513,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "clients":
+        # post : http://localhost:3000/api/v1/clients
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_client = json.loads(post_data.decode())
@@ -506,6 +523,8 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(201)
             self.end_headers()
         elif path[0] == "shipments":
+        # post : http://localhost:3000/api/v1/shipments
+        # add the json body you want to add (then find it using get and the id)
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             new_shipment = json.loads(post_data.decode())
