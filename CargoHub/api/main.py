@@ -16,22 +16,27 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
             return
         if path[0] == "warehouses":
-            paths = len(path)
+            paths = len(path) 
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/warehouses
                     warehouses = data_provider.fetch_warehouse_pool().get_warehouses()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(warehouses).encode("utf-8"))
+                    # all warehouses and their given info
                 case 2:
+                    # http://localhost:3000/api/v1/warehouses/ID
                     warehouse_id = int(path[1])
                     warehouse = data_provider.fetch_warehouse_pool().get_warehouse(warehouse_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(warehouse).encode("utf-8"))
+                    # for given warehouse all their information (location, contact info, etc.)
                 case 3:
+                    # http://localhost:3000/api/v1/warehouses/ID/locations
                     if path[2] == "locations":
                         warehouse_id = int(path[1])
                         locations = data_provider.fetch_location_pool().get_locations_in_warehouse(warehouse_id)
@@ -39,6 +44,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(locations).encode("utf-8"))
+                        # json with all the items per id and location for given warehouse
                     else:
                         self.send_response(404)
                         self.end_headers()
@@ -49,18 +55,22 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/locations
                     locations = data_provider.fetch_location_pool().get_locations()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(locations).encode("utf-8"))
+                    # All items
                 case 2:
+                    # http://localhost:3000/api/v1/locations/ID
                     location_id = int(path[1])
                     location = data_provider.fetch_location_pool().get_location(location_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(location).encode("utf-8"))
+                    # gives the location of an item(warehouse id) + location in the warehouse
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -68,6 +78,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/transfers
                     transfers = data_provider.fetch_transfer_pool().get_transfers()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
@@ -96,6 +107,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
         elif path[0] == "items":
             paths = len(path)
+            # /items/id/inventory
             match paths:
                 case 1:
                     items = data_provider.fetch_item_pool().get_items()
@@ -378,18 +390,18 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_GET(self):
-        api_key = self.headers.get("API_KEY")
+        api_key = self.headers.get("API_KEY") # Checks if the API_KEY matches with the api_key in auth.provider
         user = auth_provider.get_user(api_key)
-        if user == None:
-            self.send_response(401)
+        if user == None:    
+            self.send_response(401) # If it does not match it sends error401
             self.end_headers()
-        else:
+        else: 
             try:
-                path = self.path.split("/")
-                if len(path) > 3 and path[1] == "api" and path[2] == "v1":
+                path = self.path.split("/") # Checks if the path starts with ./api/v1/***
+                if len(path) > 3 and path[1] == "api" and path[2] == "v1": 
                     self.handle_get_version_1(path[3:], user)
             except Exception:
-                self.send_response(500)
+                self.send_response(500) # If it does not it sends error505
                 self.end_headers()
 
     def handle_post_version_1(self, path, user):
@@ -704,98 +716,98 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
 
     def handle_delete_version_1(self, path, user):
-        if not auth_provider.has_access(user, path, "delete"):
+        if not auth_provider.has_access(user, path, "delete"): #Checks whether we have access to delete a certain thing.
             self.send_response(403)
             self.end_headers()
             return
-        if path[0] == "warehouses":
-            warehouse_id = int(path[1])
+        if path[0] == "warehouses": # http://localhost:3000/api/v1/warehouses/id
+            warehouse_id = int(path[1]) 
             data_provider.fetch_warehouse_pool().remove_warehouse(warehouse_id)
             data_provider.fetch_warehouse_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "locations":
-            location_id = int(path[1])
+        elif path[0] == "locations": # http://localhost:3000/api/v1/locations/id
+            location_id = int(path[1]) 
             data_provider.fetch_location_pool().remove_location(location_id)
             data_provider.fetch_location_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "transfers":
+        elif path[0] == "transfers": # http://localhost:3000/api/v1/transfers/id
             transfer_id = int(path[1])
             data_provider.fetch_transfer_pool().remove_transfer(transfer_id)
             data_provider.fetch_transfer_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "items":
+        elif path[0] == "items": # http://localhost:3000/api/v1/items/id
             item_id = path[1]
             data_provider.fetch_item_pool().remove_item(item_id)
             data_provider.fetch_item_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "item_lines":
+        elif path[0] == "item_lines":# http://localhost:3000/api/v1/item_lines/id
             item_line_id = int(path[1])
             data_provider.fetch_item_line_pool().remove_item_line(item_line_id)
             data_provider.fetch_item_line_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "item_groups":
+        elif path[0] == "item_groups": # http://localhost:3000/api/v1/item_groups/id
             item_group_id = int(path[1])
             data_provider.fetch_item_group_pool().remove_item_group(item_group_id)
             data_provider.fetch_item_group_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "item_types":
+        elif path[0] == "item_types": # http://localhost:3000/api/v1/item_types/id
             item_type_id = int(path[1])
             data_provider.fetch_item_type_pool().remove_item_type(item_type_id)
             data_provider.fetch_item_type_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "inventories":
+        elif path[0] == "inventories": # http://localhost:3000/api/v1/inventories/id
             inventory_id = int(path[1])
             data_provider.fetch_inventory_pool().remove_inventory(inventory_id)
             data_provider.fetch_inventory_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "suppliers":
+        elif path[0] == "suppliers": # http://localhost:3000/api/v1/suppliers/id
             supplier_id = int(path[1])
             data_provider.fetch_supplier_pool().remove_supplier(supplier_id)
             data_provider.fetch_supplier_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "orders":
+        elif path[0] == "orders": # http://localhost:3000/api/v1/orders/id
             order_id = int(path[1])
             data_provider.fetch_order_pool().remove_order(order_id)
             data_provider.fetch_order_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "clients":
+        elif path[0] == "clients": # http://localhost:3000/api/v1/clients/id
             client_id = int(path[1])
             data_provider.fetch_client_pool().remove_client(client_id)
             data_provider.fetch_client_pool().save()
             self.send_response(200)
             self.end_headers()
-        elif path[0] == "shipments":
+        elif path[0] == "shipments": # http://localhost:3000/api/v1/shipments/id
             shipment_id = int(path[1])
             data_provider.fetch_shipment_pool().remove_shipment(shipment_id)
             data_provider.fetch_shipment_pool().save()
             self.send_response(200)
             self.end_headers()
         else:
-            self.send_response(404)
+            self.send_response(404) # If the path is not correct sent error404
             self.end_headers()
 
     def do_DELETE(self):
-        api_key = self.headers.get("API_KEY")
+        api_key = self.headers.get("API_KEY") # Checks if the API_KEY matches with the api_key in auth.provider
         user = auth_provider.get_user(api_key)
         if user == None:
-            self.send_response(401)
+            self.send_response(401) # If it does not match it gives an error401
             self.end_headers()
-        else:
+        else:   # Checks if the path starts with ./api/v1/***
             try:
                 path = self.path.split("/")
                 if len(path) > 3 and path[1] == "api" and path[2] == "v1":
                     self.handle_delete_version_1(path[3:], user)
-            except Exception:
+            except Exception: # If it does not it sends error505
                 self.send_response(500)
                 self.end_headers()
 
