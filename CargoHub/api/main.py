@@ -84,14 +84,18 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(transfers).encode("utf-8"))
+                    # all transfers and there transfer status/info
                 case 2:
+                    # http://localhost:3000/api/v1/transfers/ID
                     transfer_id = int(path[1])
                     transfer = data_provider.fetch_transfer_pool().get_transfer(transfer_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(transfer).encode("utf-8"))
+                    # for selected transfer the transfer status/info
                 case 3:
+                    # http://localhost:3000/api/v1/transfers/ID/items
                     if path[2] == "items":
                         transfer_id = int(path[1])
                         items = data_provider.fetch_transfer_pool().get_items_in_transfer(transfer_id)
@@ -99,6 +103,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
+                        # for selected transfer the item info (item_id and amount)
                     else:
                         self.send_response(404)
                         self.end_headers()
@@ -107,22 +112,26 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
         elif path[0] == "items":
             paths = len(path)
-            # /items/id/inventory
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/items
                     items = data_provider.fetch_item_pool().get_items()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(items).encode("utf-8"))
+                    # All items + all info
                 case 2:
+                    # http://localhost:3000/api/v1/items/uid
                     item_id = path[1]
                     item = data_provider.fetch_item_pool().get_item(item_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item).encode("utf-8"))
+                    # all info for specific item
                 case 3:
+                    # http://localhost:3000/api/v1/items/uid/inventory
                     if path[2] == "inventory":
                         item_id = path[1]
                         inventories = data_provider.fetch_inventory_pool().get_inventories_for_item(item_id)
@@ -130,10 +139,12 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(inventories).encode("utf-8"))
+                        # for selected item the locations, availability, orders, etc.
                     else:
                         self.send_response(404)
                         self.end_headers()
                 case 4:
+                    # http://localhost:3000/api/v1/items/uid/inventory/totals
                     if path[2] == "inventory" and path[3] == "totals":
                         item_id = path[1]
                         totals = data_provider.fetch_inventory_pool().get_inventory_totals_for_item(item_id)
@@ -141,6 +152,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(totals).encode("utf-8"))
+                        # for selected item the totals (ordered, expected, allocated, available)
                     else:
                         self.send_response(404)
                         self.end_headers()
@@ -150,29 +162,36 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
         elif path[0] == "item_lines":
             paths = len(path)
             print(paths, path)
-
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/item_lines
                     item_lines = data_provider.fetch_item_line_pool().get_item_lines()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item_lines).encode("utf-8"))
+                    # All items lines (different collections)
                 case 2:
+                    
                     item_line_id = int(path[1])
                     item_line = data_provider.fetch_item_line_pool().get_item_line(item_line_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item_line).encode("utf-8"))
+                    # For selected item line all specifications
                 case 3:
                     if path[2] == "items":
+                        # http://localhost:3000/api/v1/item_lines/ID/items
                         item_line_id = int(path[1])
                         items = data_provider.fetch_item_pool().get_items_for_item_line(item_line_id)
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
+                        # You get all the items and their info for specific item line
+
+                        # if necessary you can make it so that this header and items are connected
                     else:
                         self.send_response(404)
                         self.end_headers()
@@ -183,19 +202,24 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/item_groups
                     item_groups = data_provider.fetch_item_group_pool().get_item_groups()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item_groups).encode("utf-8"))
+                    # All item groups
                 case 2:
+                    # http://localhost:3000/api/v1/item_groups/ID
                     item_group_id = int(path[1])
                     item_group = data_provider.fetch_item_group_pool().get_item_group(item_group_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item_group).encode("utf-8"))
+                    # information for specific item group
                 case 3:
+                    # http://localhost:3000/api/v1/item_groups/ID/items
                     if path[2] == "items":
                         item_group_id = int(path[1])
                         items = data_provider.fetch_item_pool().get_items_for_item_group(item_group_id)
@@ -203,6 +227,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
+                        # all items for specific item group
                     else:
                         self.send_response(404)
                         self.end_headers()
@@ -213,19 +238,24 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/item_types
                     item_types = data_provider.fetch_item_type_pool().get_item_types()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item_types).encode("utf-8"))
+                    # All item types
                 case 2:
+                    # http://localhost:3000/api/v1/item_types/ID
                     item_type_id = int(path[1])
                     item_type = data_provider.fetch_item_type_pool().get_item_type(item_type_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(item_type).encode("utf-8"))
+                    # Information for specific item type
                 case 3:
+                    # http://localhost:3000/api/v1/item_types/ID/items
                     if path[2] == "items":
                         item_type_id = int(path[1])
                         items = data_provider.fetch_item_pool().get_items_for_item_type(item_type_id)
@@ -233,6 +263,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
+                        # all items for specific item type
                     else:
                         self.send_response(404)
                         self.end_headers()
