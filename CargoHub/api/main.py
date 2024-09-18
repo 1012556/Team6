@@ -19,19 +19,24 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/warehouses
                     warehouses = data_provider.fetch_warehouse_pool().get_warehouses()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(warehouses).encode("utf-8"))
+                    # all warehouses and their given info
                 case 2:
+                    # http://localhost:3000/api/v1/warehouses/ID
                     warehouse_id = int(path[1])
                     warehouse = data_provider.fetch_warehouse_pool().get_warehouse(warehouse_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(warehouse).encode("utf-8"))
+                    # for given warehouse all their information (location, contact info, etc.)
                 case 3:
+                    # http://localhost:3000/api/v1/warehouses/ID/locations
                     if path[2] == "locations":
                         warehouse_id = int(path[1])
                         locations = data_provider.fetch_location_pool().get_locations_in_warehouse(warehouse_id)
@@ -39,6 +44,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(locations).encode("utf-8"))
+                        # json with all the items per id and location for given warehouse
                     else:
                         self.send_response(404)
                         self.end_headers()
@@ -49,18 +55,22 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/locations
                     locations = data_provider.fetch_location_pool().get_locations()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(locations).encode("utf-8"))
+                    # All items
                 case 2:
+                    # http://localhost:3000/api/v1/locations/ID
                     location_id = int(path[1])
                     location = data_provider.fetch_location_pool().get_location(location_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(location).encode("utf-8"))
+                    # gives the location of an item(warehouse id) + location in the warehouse
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -68,6 +78,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             paths = len(path)
             match paths:
                 case 1:
+                    # http://localhost:3000/api/v1/transfers
                     transfers = data_provider.fetch_transfer_pool().get_transfers()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
@@ -161,7 +172,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps(item_lines).encode("utf-8"))
                     # All items lines (different collections)
                 case 2:
-                    
+                    # http://localhost:3000/api/v1/item_lines/ID
                     item_line_id = int(path[1])
                     item_line = data_provider.fetch_item_line_pool().get_item_line(item_line_id)
                     self.send_response(200)
