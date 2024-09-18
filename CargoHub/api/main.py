@@ -273,13 +273,13 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
         elif path[0] == "inventories": 
             paths = len(path)
             match paths: # http://localhost:3000/api/v1/inventories
-                case 1: # Returns everything from inventories.json
+                case 1: # Gives all the items and their saved locations/specification
                     inventories = data_provider.fetch_inventory_pool().get_inventories()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(inventories).encode("utf-8"))
-                case 2: # Returns the inventory with matching id
+                case 2: # returns a specific item and their location specifics
                     inventory_id = int(path[1]) # http://localhost:3000/api/v1/inventories/id
                     inventory = data_provider.fetch_inventory_pool().get_inventory(inventory_id)
                     self.send_response(200)
@@ -292,7 +292,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
         elif path[0] == "suppliers": 
             paths = len(path)
             match paths: # http://localhost:3000/api/v1/suppliers
-                case 1: # Returns everything from suppliers.json
+                case 1: # Returns all the suppliers and the contact information
                     suppliers = data_provider.fetch_supplier_pool().get_suppliers()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
