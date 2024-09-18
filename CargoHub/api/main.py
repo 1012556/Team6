@@ -270,43 +270,43 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                 case _:
                     self.send_response(404)
                     self.end_headers()
-        elif path[0] == "inventories": # http://localhost:3000/api/v1/inventories
+        elif path[0] == "inventories": 
             paths = len(path)
-            match paths:
-                case 1:
+            match paths: # http://localhost:3000/api/v1/inventories
+                case 1: # Returns everything from inventories.json
                     inventories = data_provider.fetch_inventory_pool().get_inventories()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(inventories).encode("utf-8"))
-                case 2:
-                    inventory_id = int(path[1])
+                case 2: # Returns the inventory with matching id
+                    inventory_id = int(path[1]) # http://localhost:3000/api/v1/inventories/id
                     inventory = data_provider.fetch_inventory_pool().get_inventory(inventory_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(inventory).encode("utf-8"))
                 case _:
-                    self.send_response(404)
+                    self.send_response(404) # If it does not find a match send error404
                     self.end_headers()
-        elif path[0] == "suppliers":
+        elif path[0] == "suppliers": 
             paths = len(path)
-            match paths:
-                case 1:
+            match paths: # http://localhost:3000/api/v1/suppliers
+                case 1: # Returns everything from suppliers.json
                     suppliers = data_provider.fetch_supplier_pool().get_suppliers()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(suppliers).encode("utf-8"))
-                case 2:
-                    supplier_id = int(path[1])
+                case 2: # Returns supplier with matching id
+                    supplier_id = int(path[1]) # http://localhost:3000/api/v1/suppliers/id
                     supplier = data_provider.fetch_supplier_pool().get_supplier(supplier_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(supplier).encode("utf-8"))
-                case 3:
-                    if path[2] == "items":
+                case 3: # Returns the items that the supplier supplies.
+                    if path[2] == "items": # http://localhost:3000/api/v1/suppliers/items
                         supplier_id = int(path[1])
                         items = data_provider.fetch_item_pool().get_items_for_supplier(supplier_id)
                         self.send_response(200)
@@ -314,29 +314,29 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
                     else:
-                        self.send_response(404)
+                        self.send_response(404) # If it does not find a match send error404
                         self.end_headers()
                 case _:
-                    self.send_response(404)
+                    self.send_response(404) # If it does not find a match send error404
                     self.end_headers()
-        elif path[0] == "orders": # http://localhost:3000/api/v1/orders
+        elif path[0] == "orders": 
             paths = len(path)
-            match paths:
-                case 1:
+            match paths: # http://localhost:3000/api/v1/orders
+                case 1: # Returns everything from orders.py
                     orders = data_provider.fetch_order_pool().get_orders()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(orders).encode("utf-8"))
-                case 2:
-                    order_id = int(path[1])
+                case 2: # Returns info about the order with matching id
+                    order_id = int(path[1]) # http://localhost:3000/api/v1/orders/id
                     order = data_provider.fetch_order_pool().get_order(order_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(order).encode("utf-8"))
-                case 3:
-                    if path[2] == "items":
+                case 3: # Returns a dictionary of items with item_id and the amount ordered from the specific order
+                    if path[2] == "items": # http://localhost:3000/api/v1/orders/items
                         order_id = int(path[1])
                         items = data_provider.fetch_order_pool().get_items_in_order(order_id)
                         self.send_response(200)
@@ -344,29 +344,29 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
                     else:
-                        self.send_response(404)
+                        self.send_response(404) # If it does not find a match send error404
                         self.end_headers()
                 case _:
-                    self.send_response(404)
+                    self.send_response(404) # If it does not find a match send error404
                     self.end_headers()
-        elif path[0] == "clients":
+        elif path[0] == "clients": 
             paths = len(path)
-            match paths:
-                case 1:
+            match paths: # http://localhost:3000/api/v1/orders
+                case 1: # Returns everything from orders.py
                     clients = data_provider.fetch_client_pool().get_clients()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(clients).encode("utf-8"))
-                case 2:
-                    client_id = int(path[1])
+                case 2: # Returns info about the order with matching id
+                    client_id = int(path[1]) # http://localhost:3000/api/v1/orders/id
                     client = data_provider.fetch_client_pool().get_client(client_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(client).encode("utf-8"))
-                case 3:
-                    if path[2] == "orders":
+                case 3: # Returns orders that are shipped to client with the id
+                    if path[2] == "orders": # http://localhost:3000/api/v1/orders/id/orders
                         client_id = int(path[1])
                         orders = data_provider.fetch_order_pool().get_orders_for_client(client_id)
                         self.send_response(200)
@@ -374,50 +374,50 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(json.dumps(orders).encode("utf-8"))
                     else:
-                        self.send_response(404)
+                        self.send_response(404) # If it does not find a match send erro404
                         self.end_headers()
                 case _:
-                    self.send_response(404)
+                    self.send_response(404) # If it does not find a match send error404
                     self.end_headers()
         elif path[0] == "shipments":
             paths = len(path)
-            match paths:
-                case 1:
+            match paths: # http://localhost:3000/api/v1/shipments
+                case 1: # Returns everything from shipments.py
                     shipments = data_provider.fetch_shipment_pool().get_shipments()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(shipments).encode("utf-8"))
-                case 2:
-                    shipment_id = int(path[1])
+                case 2: # Returns info about the shipments with the matching shipment id
+                    shipment_id = int(path[1]) # http://localhost:3000/api/v1/shipments/id
                     shipment = data_provider.fetch_shipment_pool().get_shipment(shipment_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(shipment).encode("utf-8"))
-                case 3:
-                    if path[2] == "orders":
-                        shipment_id = int(path[1])
+                case 3:  
+                    if path[2] == "orders": # http://localhost:3000/api/v1/shipments/id/orders
+                        shipment_id = int(path[1]) # Returns a list with the order id 
                         orders = data_provider.fetch_order_pool().get_orders_in_shipment(shipment_id)
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(orders).encode("utf-8"))
-                    elif path[2] == "items":
-                        shipment_id = int(path[1])
+                    elif path[2] == "items": # http://localhost:3000/api/v1/shipments/id/items
+                        shipment_id = int(path[1]) # Returns a dictionary with item_id and amount of items shipped
                         items = data_provider.fetch_shipment_pool().get_items_in_shipment(shipment_id)
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
                         self.end_headers()
                         self.wfile.write(json.dumps(items).encode("utf-8"))
                     else:
-                        self.send_response(404)
+                        self.send_response(404) # If it does not find a match send error404
                         self.end_headers()
                 case _:
-                    self.send_response(404)
+                    self.send_response(404) # If it does not find a match send error404
                     self.end_headers()
         else:
-            self.send_response(404)
+            self.send_response(404) # If it does not find a match send error404
             self.end_headers()
 
     def do_GET(self):
@@ -434,7 +434,6 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             except Exception:
                 self.send_response(500) # If it does not it sends error505
                 self.end_headers()
-
 
     def handle_post_version_1(self, path, user):
         if not auth_provider.has_access(user, path, "post"):
