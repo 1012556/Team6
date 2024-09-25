@@ -47,7 +47,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         # json with all the items per id and location for given warehouse
                     else:
                         self.send_response(404)
-                        self.end_headers()
+                        self.end_headers()  
                 case _:
                     self.send_response(404)
                     self.end_headers()
@@ -72,7 +72,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps(location).encode("utf-8"))
                     # gives the location of an item(warehouse id) + location in the warehouse
                 case _:
-                    self.send_response(404)
+                    self.send_response(404) 
                     self.end_headers()
         elif path[0] == "transfers":
             paths = len(path)
@@ -322,13 +322,13 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
         elif path[0] == "orders": 
             paths = len(path)
             match paths: # http://localhost:3000/api/v1/orders
-                case 1: # Returns everything from orders.py
+                case 1: # Returns everything from orders.json (id/date/status/prices/items ordered)
                     orders = data_provider.fetch_order_pool().get_orders()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(orders).encode("utf-8"))
-                case 2: # Returns info about the order with matching id
+                case 2: # Returns info about the order with matching id (id/date/status/prices/items ordered)
                     order_id = int(path[1]) # http://localhost:3000/api/v1/orders/id
                     order = data_provider.fetch_order_pool().get_order(order_id)
                     self.send_response(200)
@@ -352,20 +352,20 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
         elif path[0] == "clients": 
             paths = len(path)
             match paths: # http://localhost:3000/api/v1/orders
-                case 1: # Returns everything from orders.py
+                case 1: # Returns everything from orders.json (id/date/costs/notes/items shipped/statuses)
                     clients = data_provider.fetch_client_pool().get_clients()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(clients).encode("utf-8"))
-                case 2: # Returns info about the order with matching id
+                case 2: # Returns info about the order with matching id (items shipped, costs/prices, warehouse id and shipment details)
                     client_id = int(path[1]) # http://localhost:3000/api/v1/orders/id
                     client = data_provider.fetch_client_pool().get_client(client_id)
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(client).encode("utf-8"))
-                case 3: # Returns orders that are shipped to client with the id
+                case 3: # Returns orders that are shipped to client with the id (items shipped, costs/prices, warehouse id and shipment details)
                     if path[2] == "orders": # http://localhost:3000/api/v1/orders/id/orders
                         client_id = int(path[1])
                         orders = data_provider.fetch_order_pool().get_orders_for_client(client_id)
@@ -382,13 +382,13 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
         elif path[0] == "shipments":
             paths = len(path)
             match paths: # http://localhost:3000/api/v1/shipments
-                case 1: # Returns everything from shipments.py
+                case 1: # Returns everything from shipments.py (shipment ids/dates/shipped items/shipment details)
                     shipments = data_provider.fetch_shipment_pool().get_shipments()
                     self.send_response(200)
                     self.send_header("Content-type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps(shipments).encode("utf-8"))
-                case 2: # Returns info about the shipments with the matching shipment id
+                case 2: # Returns info about the shipments with the matching shipment id (dates and shipped items)
                     shipment_id = int(path[1]) # http://localhost:3000/api/v1/shipments/id
                     shipment = data_provider.fetch_shipment_pool().get_shipment(shipment_id)
                     self.send_response(200)
@@ -404,7 +404,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(json.dumps(orders).encode("utf-8"))
                     elif path[2] == "items": # http://localhost:3000/api/v1/shipments/id/items
-                        shipment_id = int(path[1]) # Returns a dictionary with item_id and amount of items shipped
+                        shipment_id = int(path[1]) # Returns a dictionary with item_id and amount of items shipped.
                         items = data_provider.fetch_shipment_pool().get_items_in_shipment(shipment_id)
                         self.send_response(200)
                         self.send_header("Content-type", "application/json")
@@ -432,7 +432,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                 if len(path) > 3 and path[1] == "api" and path[2] == "v1": 
                     self.handle_get_version_1(path[3:], user)
             except Exception:
-                self.send_response(500) # If it does not it sends error505
+                self.send_response(500) # If it does not it sends error500
                 self.end_headers()
 
     def handle_post_version_1(self, path, user):
@@ -556,6 +556,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
             return
         if path[0] == "warehouses":
+            # ENDPOINT: http://localhost:3000/api/v1/warehouses/{ID} TESTED
+            # changes the warehouse in the json on warehouse id. Body consists of an dict with an warehouse
+            # This a functional requirement: The ability to change the data of a warehouse. 
             warehouse_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -565,6 +568,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "locations":
+            # ENDPOINT: http://localhost:3000/api/v1/locations/{ID} TESTED
+            # changes the location in the json on location id. Body consists of an dict with an location
+            # This a functional requirement: The ability to change the data of a location. 
             location_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -574,6 +580,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "transfers":
+            # ENDPOINT: http://localhost:3000/api/v1/transfers/{ID} TESTED
+            # changes the transfer in the json on transfer id. Body consists of an dict with an transfer
+            # This a functional requirement: The ability to change the data of a transfer. 
             paths = len(path)
             match paths:
                 case 2:
@@ -587,6 +596,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                 case 3:
                     if path[2] == "commit":
+                        # ENDPOINT: http://localhost:3000/api/v1/transfers/{ID}/commit GIVES 500 ERROR!
+                        # this is supposed to make an commitment of a tranfser. TRANSFER TO IS MISSING.
+                        # Functional requirement: Make a tranfser definite and changes the items from one location to another. 
                         transfer_id = int(path[1])
                         transfer = data_provider.fetch_transfer_pool().get_transfer(transfer_id)
                         for x in transfer["items"]:
@@ -616,6 +628,10 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.send_response(404)
                     self.end_headers()
         elif path[0] == "items":
+            # ENDPOINT: http://localhost:3000/api/v1/items/{UID} TESTED
+            # THIS USES UID INSTEAD OF ID
+            # changes the item in the json on item uid. Body consists of an dict with an item
+            # This a functional requirement: The ability to change the data of a item. 
             item_id = path[1]
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -625,6 +641,10 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "item_lines":
+            # ENDPOINT: http://localhost:3000/api/v1/item_lines/{ID} TESTED
+            # changes the item line in the json on item line id. Body consists of an dict with an item line
+            # This a functional requirement: The ability to change the data of a item line. 
+            # Missing discription
             item_line_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -634,6 +654,10 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "item_groups":
+            # ENDPOINT: http://localhost:3000/api/v1/item_groups/{ID} TESTED
+            # changes the item group in the json on item group id. Body consists of an dict with an item group
+            # This a functional requirement: The ability to change the data of a item group. 
+            # Missing discription
             item_group_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -643,6 +667,10 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "item_types":
+            # ENDPOINT: http://localhost:3000/api/v1/item_types/{ID} TESTED
+            # changes the item type in the json on item type id. Body consists of an dict with an item type
+            # This a functional requirement: The ability to change the data of a item type. 
+            # Missing discription
             item_type_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -652,6 +680,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "inventories":
+            # ENDPOINT: http://localhost:3000/api/v1/inventories/{ID} TESTED
+            # changes the inventory in the json on inventory id. Body consists of an dict with an inventory
+            # This a functional requirement: The ability to change the data of a inventory. 
             inventory_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -661,6 +692,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "suppliers":
+            # ENDPOINT: http://localhost:3000/api/v1/suppliers/{ID} TESTED
+            # changes the supplier in the json on supplier id. Body consists of an dict with an supplier
+            # This a functional requirement: The ability to change the data of a supplier. 
             supplier_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -670,6 +704,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "orders":
+            # ENDPOINT: http://localhost:3000/api/v1/orders/{ID} TESTED
+            # changes the order in the json on order id. Body consists of an dict with an order
+            # This a functional requirement: The ability to change the data of a order. 
             paths = len(path)
             match paths:
                 case 2:
@@ -683,6 +720,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                 case 3:
                     if path[2] == "items":
+                        # ENDPOINT: http://localhost:3000/api/v1/orders/{ID}/items TESTED
+                        # changes the items in an order in the json on order id. Body consists of an list with items.
+                        # This a functional requirement: The ability to change the items in a order.
                         order_id = int(path[1])
                         content_length = int(self.headers["Content-Length"])
                         post_data = self.rfile.read(content_length)
@@ -698,6 +738,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.send_response(404)
                     self.end_headers()
         elif path[0] == "clients":
+            # ENDPOINT: http://localhost:3000/api/v1/clients/{ID} TESTED
+            # changes the client in the json on client id. Body consists of an dict with an client
+            # This a functional requirement: The ability to change the data of a client. 
             client_id = int(path[1])
             content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
@@ -707,6 +750,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
         elif path[0] == "shipments":
+            # ENDPOINT: http://localhost:3000/api/v1/shipments/{ID} TESTED
+            # changes the shipment in the json on shipment id. Body consists of an dict with an shipment
+            # This a functional requirement: The ability to change the data of a shipment. 
             paths = len(path)
             match paths:
                 case 2:
@@ -720,6 +766,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                 case 3:
                     if path[2] == "orders":
+                        # ENDPOINT: http://localhost:3000/api/v1/shipments/{ID}/orders 500 ERROR
+                        # PROBABLY A LIST OF ORDERS NEEDED IN THE BODY
+                        # Changes the order from an shipment. idk what it does
                         shipment_id = int(path[1])
                         content_length = int(self.headers["Content-Length"])
                         post_data = self.rfile.read(content_length)
@@ -729,6 +778,9 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                         self.send_response(200)
                         self.end_headers()
                     elif path[2] == "items":
+                        # ENDPOINT: http://localhost:3000/api/v1/shipments/{ID}/items GIVES 500 ERROR
+                        # In the body maybe a list with items???
+                        # should be able to change the items in an shipment. 
                         shipment_id = int(path[1])
                         content_length = int(self.headers["Content-Length"])
                         post_data = self.rfile.read(content_length)
