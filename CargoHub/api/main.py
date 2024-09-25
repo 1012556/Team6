@@ -720,7 +720,7 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
                     self.end_headers()
                 case 3:
                     if path[2] == "items":
-                        # ENDPOINT: http://localhost:3000/api/v1/orders/{ID}/items TESTED
+                        # ENDPOINT: http://localhost:3000/api/v1/orders/{ID}/items DOES NOT WORK 500 ERROR
                         # changes the items in an order in the json on order id. Body consists of an list with items.
                         # This a functional requirement: The ability to change the items in a order.
                         order_id = int(path[1])
