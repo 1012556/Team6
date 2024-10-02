@@ -1,3 +1,4 @@
+
 from models.clients import Clients
 
 
@@ -70,8 +71,55 @@ def test_AddClients():
     obj.add_client(emptyclient)
     assert len(obj.data) == 2 # lege client word ook toegevoegd
     
-
-
+def test_RemoveClients():
+    obj.add_client(client2)
+    obj.remove_client(client2["id"])
+    len_cient_list_before = len(obj.data)
+    assert obj.data < len(len_cient_list_before)
     
+def addCients():
+    obj.add_location(location1)
+    obj.add_location(location2)
 
+def test_addvalidlocations():
+    obj.data = []
+    assert len(obj.data) == 2
+    assert len(obj.data) == 3
+
+def test_getlocation():
+    obj.data = []
+    addlocations()
+    data = obj.get_location(2)
+    assert data["id"] == 2
+
+def test_addemptylocations():
+    obj.data = []
+    obj.add_location(emptylocation)
+    assert len(obj.data) == 3 # geen check voor lege dict
+
+def test_updatelocation():
+    obj.update_location(2, locationtoupdate)
+    assert obj.get_location(2)["id"] == 2 # update id niet automatisch
+
+def test_removelocation():
+    obj.remove_location(3)
+    assert len(obj.data) == 3
+
+def test_getlocationswarehouse():
+    data = obj.get_locations_in_warehouse(1)
+    assert len(data) == 2
+
+def test_dbload():
+    obj.data = []
+    obj.load(False)
+    assert len(obj.data) == 1
+
+def test_dbsave():
+    obj.data = []
+    addlocations()
+    obj.save()
+    obj.data = []
+    obj.load(False)
+
+    assert len(obj.data) == 3
     
