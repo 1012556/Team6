@@ -4,6 +4,7 @@ from models.base import Base
 
 INVENTORIES = []
 
+# inventories is per item waar en hoeveel hier er te vinden van zijn. 
 
 class Inventories(Base):
     def __init__(self, root_path, is_debug=False):
