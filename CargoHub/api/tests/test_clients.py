@@ -1,5 +1,6 @@
 from models.clients import Clients
 
+
 client1 = {
         "id": 1,
         "name": "Damian Virgilio",
@@ -59,8 +60,18 @@ client4 = {
         "created_at": "2010-04-28 02:22:53",
         "updated_at": "2022-02-09 20:22:35"
     }
+emptyclient = { }
+
+obj = Clients("./CargoHub/data/test_")
 
 def test_AddClients():
-    obj = Clients()
-    obj.Add_client(client1)
-    assert len(obj.CLIENTS) == 1
+    obj.add_client(client1)
+    assert len(obj.data) == 2
+    obj.add_client(emptyclient)
+    assert len(obj.data) == 2 # lege client word ook toegevoegd
+    
+
+
+    
+
+    
