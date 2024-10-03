@@ -96,7 +96,7 @@ inventorytoupdate = {
 
 emptyinventory = {}
 
-obj = Inventories("./CargoHub/data/test_")
+obj = Inventories("./CargoHub/data/testdb/test_")
 
 def addinventories():
     obj.data = []
@@ -168,11 +168,11 @@ def test_updateinventory():
     obj.update_inventory(2, inventorytoupdate)
     assert obj.get_inventory(2) == inventorytoupdate # update id niet automatisch
 
-def test_invalidupdateinvalid():
+def test_invalidupdateinventory():
     addinventories()
-    obj.update_inventory((len(Inventorylist) + 1), inventorytoupdate)
+    obj.update_inventory(4, inventorytoupdate)
     assert len(obj.data) == len(Inventorylist)
-    assert obj.get_inventory((len(Inventorylist) + 1)) == None
+    assert obj.get_inventory(4) == None
 
 def test_removeinventory():
     addinventories()

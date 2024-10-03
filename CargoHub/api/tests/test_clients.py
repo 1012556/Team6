@@ -63,7 +63,7 @@ client4 = {
     }
 emptyclient = { }
 
-obj = Clients("./CargoHub/data/test_")
+obj = Clients("./CargoHub/data/testdb/test_")
 
 def test_AddClients():
     obj.add_client(client1)

@@ -23,7 +23,7 @@ locationtoupdate = {
 
 emptylocation = {}
 
-obj = Locations("./CargoHub/data/test_")
+obj = Locations("./CargoHub/data/testdb/test_")
 
 def addlocations():
     obj.data = []
@@ -54,7 +54,7 @@ def test_updatelocation():
     obj.update_location(2, locationtoupdate)
     assert obj.get_location(2)["id"] == 2 # update id niet automatisch
 
-def test_invalidupdateinvalid():
+def test_invalidupdateloction():
     addlocations()
     obj.update_location(3, locationtoupdate)
     assert len(obj.data) == 2
