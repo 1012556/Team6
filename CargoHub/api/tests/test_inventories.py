@@ -189,7 +189,7 @@ def test_dbload():
     obj.load(False)
     assert len(obj.data) == len(Inventorylist)
 
-def test_dbsave():
+def test_dbsave_load():
     addinventories()
     obj.save()
     obj.data = []

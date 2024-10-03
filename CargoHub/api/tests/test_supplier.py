@@ -34,7 +34,7 @@ supplierlist = [
         "created_at": "1995-12-18 03:05:46",
         "updated_at": "2019-11-10 22:11:12"
     }
-   ]
+]
 
 suppliertoupdate =   {
         "id": 3,
@@ -111,6 +111,7 @@ def test_dbload():
     addsuppliers()
     obj.load(False)
     assert len(obj.data) == len(supplierlist)
+    obj.data = []
 
 def test_dbsave():
     addsuppliers()
