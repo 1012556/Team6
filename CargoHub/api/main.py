@@ -2,11 +2,19 @@ import socketserver
 import http.server
 import json
 
+from flask import Flask, jsonify, request
+
+
 from providers import auth_provider
 from providers import data_provider
 
 from processors import notification_processor
 
+app = Flask(__name__)
+
+@app.route("/api/example", methods = ["GET"])
+def exampleroute():
+    return jsonify({"Message" : "Hello world"})
 
 class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
 
@@ -914,10 +922,13 @@ class ApiRequestHandler(http.server.BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    
     PORT = 3000
-    with socketserver.TCPServer(("", PORT), ApiRequestHandler) as httpd:
-        auth_provider.init()
-        data_provider.init()
-        notification_processor.start()
-        print(f"Serving on port {PORT}...")
-        httpd.serve_forever()
+    auth_provider.init()
+    data_provider.init()
+    notification_processor.start()
+    print(f"Serving on port {PORT}...")
+    app.run(host= "0.0.0.0", port= PORT, debug= True)
+    # with socketserver.TCPServer(("", PORT), ApiRequestHandler) as httpd:
+
+    #     httpd.serve_forever()
