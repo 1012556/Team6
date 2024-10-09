@@ -249,7 +249,6 @@ def test_clien_db_load_true():
     assert len(obj.data) == 0, "lege lijst als er geen json is, verwachtte 0 maar kreeg {}".format(len(obj.data))
 
 def test_client_db_save():
-    obj.data = []
     AddClients()
     obj.save()
     obj.load(False)
