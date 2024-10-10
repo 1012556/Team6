@@ -5,6 +5,8 @@ import json
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from Controllers.WarehouseController import warehouse_router
+
 
 from providers import auth_provider
 from providers import data_provider
@@ -13,46 +15,15 @@ from processors import notification_processor
 
 app = FastAPI()
 
-def authorise_user(api_key):
+app.include_router(warehouse_router, prefix="/api/v1")
 
-    user = auth_provider.get_user(api_key)
-    if user == None:    
-        return None, 401
-    return user, 200
-            
-def authorise_method(user, path, method):
-    if not auth_provider.has_access(user, path, method):
-        return False, 403
-    return True, 200
-
-def authorization(key, method, path):
-    user, status_code = authorise_user(key)
-    if user is None:
-        return ("unauthorized"), status_code
-    
-    has_access, method_status_code = authorise_method(user, path, method)
-    if not has_access:
-        return ({"message": "Forbidden"}), method_status_code
 
 @app.get("/api/example")
 def exampleroute():
     return {"Message" : "Hello world"}
 
 
-# http://localhost:3000/api/v1/warehouses
-@app.get("/api/v1/warehouses")
-def request_get_warehouses(request: Request):
-    authorization(request.headers.get('API_KEY'), request.url.path, request.method)
 
-    warehouses = data_provider.fetch_warehouse_pool().get_warehouses()
-    return warehouses
-
-@app.get("/api/v1/warehouses/{warehouse_id}")
-def request_get_warehouse(request: Request, warehouse_id: int):
-    authorization(request.headers.get('API_KEY'), request.url.path, request.method)
-
-    warehouses = data_provider.fetch_warehouse_pool().get_warehouse(warehouse_id)
-    return warehouses
 
 #     def handle_get_version_1(self, path, user):
 #         if path[0] == "warehouses":
