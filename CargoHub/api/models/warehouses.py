@@ -31,7 +31,7 @@ class Warehouses(Base):
                 self.data[i] = warehouse
                 break
 
-    def remove_warehouse(self, warehouse_id):
+    def remove_warehouse(self, warehouse_id): 
         for x in self.data:
             if x["id"] == warehouse_id:
                 self.data.remove(x)
