@@ -1,7 +1,7 @@
 import json
 
 from models.base import Base
-from providers import data_provider
+
 
 ORDERS = []
 
@@ -53,9 +53,10 @@ class Orders(Base):
                 break
 
     def update_items_in_order(self, order_id, items):
+        from providers import data_provider
         order = self.get_order(order_id)
         current = order["items"]
-        for x in current:
+        for x in current: 
             found = False
             for y in items:
                 if x["item_id"] == y["item_id"]:
