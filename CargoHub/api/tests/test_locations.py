@@ -1,4 +1,4 @@
-from models.locations import Locations
+from CargoHub.api.Services.Service_locations import ServiceLocations
 
 location1 = {
         "id": 1,

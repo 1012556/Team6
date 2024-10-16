@@ -1,11 +1,11 @@
 import json
 
-from models.base import Base
+from Services.base import Base
 
 WAREHOUSES = []
 
 
-class Warehouses(Base):
+class ServiceWarehouses(Base):
     def __init__(self, root_path, is_debug=False):
         self.data_path = root_path + "warehouses.json"
         self.load(is_debug)
@@ -20,15 +20,18 @@ class Warehouses(Base):
         return None
 
     def add_warehouse(self, warehouse):
-        warehouse["created_at"] = self.get_timestamp()
-        warehouse["updated_at"] = self.get_timestamp()
-        self.data.append(warehouse)
+        warehouse_data = warehouse.dict()
+        warehouse_data["created_at"] = self.get_timestamp()
+        warehouse_data["updated_at"] = self.get_timestamp()
+        self.data.append(warehouse_data)
 
     def update_warehouse(self, warehouse_id, warehouse):
-        warehouse["updated_at"] = self.get_timestamp()
+        warehouse_data = warehouse.dict()
+        warehouse_data["updated_at"] = self.get_timestamp()
+        warehouse_data["id"] = warehouse_id
         for i in range(len(self.data)):
             if self.data[i]["id"] == warehouse_id:
-                self.data[i] = warehouse
+                self.data[i] = warehouse_data
                 break
 
     def remove_warehouse(self, warehouse_id):

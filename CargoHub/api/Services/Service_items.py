@@ -1,11 +1,11 @@
 import json
 
-from models.base import Base
+from Services.base import Base
 
 ITEMS = []
 
 
-class Items(Base):
+class ServiceItems(Base):
     def __init__(self, root_path, is_debug=False):
         self.data_path = root_path + "items.json"
         self.load(is_debug)

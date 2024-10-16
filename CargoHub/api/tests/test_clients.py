@@ -1,5 +1,5 @@
 
-from models.clients import Clients
+from CargoHub.api.Services.ServicesClients import Clients
 
 
 client1 = {

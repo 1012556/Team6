@@ -1,11 +1,11 @@
 import json
 
-from models.base import Base
+from Services.base import Base
 
 TRANSFERS = []
 
 
-class Transfers(Base):
+class ServiceTransfers(Base):
     def __init__(self, root_path, is_debug=False):
         self.data_path = root_path + "transfers.json"
         self.load(is_debug)

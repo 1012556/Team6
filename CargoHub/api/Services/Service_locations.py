@@ -1,11 +1,11 @@
 import json
 
-from models.base import Base
+from Services.base import Base
 
 LOCATIONS = []
 
 
-class Locations(Base):
+class ServiceLocations(Base):
     def __init__(self, root_path, is_debug=False):
         self.data_path = root_path + "locations.json"
         self.load(is_debug)

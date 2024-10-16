@@ -1,12 +1,12 @@
 import json
 
-from models.base import Base
+from Services.base import Base
 
 INVENTORIES = []
 
 # inventories is per item waar en hoeveel hier er te vinden van zijn. 
 
-class Inventories(Base):
+class ServiceInventories(Base):
     def __init__(self, root_path, is_debug=False):
         self.data_path = root_path + "inventories.json"
         self.load(is_debug)

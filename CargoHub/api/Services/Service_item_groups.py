@@ -1,11 +1,11 @@
 import json
 
-from models.base import Base
+from Services.base import Base
 
 ITEM_GROUPS = []
 
 
-class ItemGroups(Base):
+class ServiceItemGroups(Base):
     def __init__(self, root_path, is_debug=False):
         self.data_path = root_path + "item_groups.json"
         self.load(is_debug)

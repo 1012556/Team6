@@ -1,0 +1,66 @@
+
+### WAREHOUSE
+### get all warehouses
+GET http://localhost:3000/api/v1/warehouse
+
+
+### get a warehouse
+GET http://localhost:3000/api/v1/warehouse/1
+
+
+### add a warehouse
+POST http://localhost:3000/api/v1/warehouse
+Content-Type: application/json
+
+{
+    
+    "id": 900,
+    "code": "HALLO",
+    "name": "Virgilios pizzaria",
+    "address": "Sibilla-Hendriks-Gasse 5/8",
+    "zip": "05955",
+    "city": "Holzminden",
+    "province": "Saarland",
+    "country": "DE",
+    "contact": {
+        "name": "Mirco Warmer",
+        "phone": "+49(0)0048791642",
+        "email": "katjaklotz@example.net"
+    },
+    "created_at": "1974-04-03 11:24:15",
+    "updated_at": "2021-12-08 15:59:38"
+    
+}
+
+### update warehouse
+PUT  http://localhost:3000/api/v1/warehouse/1
+Content-Type: application/json
+
+{
+    
+    "id": 2,
+    "code": "HALLO",
+    "name": "Virgilios pizzaria",
+    "address": "Sibilla-Hendriks-Gasse 5/8",
+    "zip": "05955",
+    "city": "Holzminden",
+    "province": "Saarland",
+    "country": "DE",
+    "contact": {
+        "name": "Mirco Warmer",
+        "phone": "+49(0)0048791642",
+        "email": "katjaklotz@example.net"
+    },
+    "created_at": "1974-04-03 11:24:15",
+    "updated_at": "2021-12-08 15:59:38"
+    
+}
+
+### delete warehouse
+DELETE   http://localhost:3000/api/v1/warehouse/1
+
+
+### get locations in warehouse
+GET http://localhost:3000/api/v1/warehouse/3/locations
+
+

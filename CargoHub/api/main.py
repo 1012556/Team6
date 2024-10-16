@@ -5,7 +5,7 @@ import json
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from Controllers.WarehouseController import warehouse_router
+from Controllers.WarehouseController import WarehouseController
 
 
 from providers import auth_provider
@@ -15,7 +15,7 @@ from processors import notification_processor
 
 app = FastAPI()
 
-app.include_router(warehouse_router, prefix="/api/v1")
+app.include_router(WarehouseController.warehouse_router, prefix="/api/v1/warehouse", tags= ["warehouses"])
 
 
 @app.get("/api/example")
@@ -23,45 +23,6 @@ def exampleroute():
     return {"Message" : "Hello world"}
 
 
-
-
-#     def handle_get_version_1(self, path, user):
-#         if path[0] == "warehouses":
-#             paths = len(path)
-#             match paths:
-#                 case 1: DONE
-#                     
-#                     warehouses = data_provider.fetch_warehouse_pool().get_warehouses()
-#                     self.send_response(200)
-#                     self.send_header("Content-type", "application/json")
-#                     self.end_headers()
-#                     self.wfile.write(json.dumps(warehouses).encode("utf-8"))
-#                     # all warehouses and their given info
-#                 case 2: DONE
-#                     # http://localhost:3000/api/v1/warehouses/ID
-#                     warehouse_id = int(path[1])
-#                     warehouse = data_provider.fetch_warehouse_pool().get_warehouse(warehouse_id)
-#                     self.send_response(200)
-#                     self.send_header("Content-type", "application/json")
-#                     self.end_headers()
-#                     self.wfile.write(json.dumps(warehouse).encode("utf-8"))
-#                     # for given warehouse all their information (location, contact info, etc.)
-#                 case 3:
-#                     # http://localhost:3000/api/v1/warehouses/ID/locations
-#                     if path[2] == "locations":
-#                         warehouse_id = int(path[1])
-#                         locations = data_provider.fetch_location_pool().get_locations_in_warehouse(warehouse_id)
-#                         self.send_response(200)
-#                         self.send_header("Content-type", "application/json")
-#                         self.end_headers()
-#                         self.wfile.write(json.dumps(locations).encode("utf-8"))
-#                         # json with all the items per id and location for given warehouse
-#                     else:
-#                         self.send_response(404)
-#                         self.end_headers()  
-#                 case _:
-#                     self.send_response(404)
-#                     self.end_headers()
 #         elif path[0] == "locations":
 #             paths = len(path)
 #             match paths:
